@@ -1,0 +1,4 @@
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/install/CMakeFiles/rebuild_cache.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/install/CMakeFiles/edit_cache.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/install/CMakeFiles/gtest_main.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/install/CMakeFiles/gtest.dir

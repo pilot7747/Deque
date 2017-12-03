@@ -1,0 +1,14 @@
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/rebuild_cache.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/edit_cache.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample9_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample1_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample3_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample6_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample5_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample4_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample8_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample10_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample7_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/gtest_main.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/sample2_unittest.dir
+/Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/googletest/make/mybuild/CMakeFiles/gtest.dir
