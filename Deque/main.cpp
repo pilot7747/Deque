@@ -1,24 +1,81 @@
-///Users/nikita/Library/Mobile Documents/com~apple~CloudDocs/ФИВТ/1 курс/АиСД — проекты/Deque/Deque/main.cpp
 //  main.cpp
 //  Deque
 //
-//  Created by Никита on 27.11.2017.
-//  Copyright © 2017 Никита. All rights reserved.
+//  Created by Nikita Pavlichenko on 27.11.2017.
+//  Copyright © 2017 Nikita Pavlichenko. All rights reserved.
 //
 
 #include <iostream>
 #include <gtest/gtest.h>
+#include <chrono>
 #include "deque.h"
 
+double getTime(void func(Deque<int>&, size_t), Deque<int> &deq, size_t size)
+{
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    func(deq, size);
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+    return time_span.count();
+}
+
+
+
+void stressPushing(Deque<int> &deq, size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        if (rand() % 2 == 0)
+            deq.push_back(rand());
+        else
+            deq.push_front(rand());
+    }
+}
+
+void stressPoping(Deque<int> &deq, size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        if (rand() % 2 == 0)
+            deq.pop_back();
+        else
+            deq.pop_front();
+    }
+}
+
+void stressPopingOneHalf(Deque<int> &deq, size_t size) {
+    size_t i = 0;
+    for (; i < size / 2; ++i) {
+        deq.pop_back();
+    }
+    for (; i < size; ++i) {
+        deq.pop_front();
+    }
+}
+
+void stressRandomAccess(Deque<int> &deq, size_t size) {
+    int tmp;
+    for (size_t i = 0; i < size; ++i) {
+        tmp = deq[rand() % size];
+        Deque<int>::const_iterator it = deq.cbegin();
+        it += rand() % size;
+        tmp = *it;
+    }
+}
 
 class SimpleDequeTest : public ::testing::Test {
 protected:
-    void SetUp()
-    {
+    void SetUp() {
         deq.clear();
     }
-    void TearDown()
-    {
+    void TearDown() {
+        deq.clear();
+    }
+    Deque<int> deq;
+};
+
+class stressTests : public ::testing::Test {
+protected:
+    void SetUp() {
+        deq.clear();
+    }
+    void TearDown() {
         deq.clear();
     }
     Deque<int> deq;
@@ -108,8 +165,7 @@ TEST_F(SimpleDequeTest, Balancing) {
     ASSERT_EQ(deq.empty(), true);
 }
 
-TEST_F(SimpleDequeTest, simpleIteration)
-{
+TEST_F(SimpleDequeTest, simpleIteration) {
     deq.push_back(1);
     deq.push_back(2);
     deq.push_back(3);
@@ -152,23 +208,19 @@ TEST_F(SimpleDequeTest, simpleIteration)
     ASSERT_EQ(it[0], 3);
     
     ASSERT_EQ(deq.end() - deq.begin(), 3);
-    /*it--;
-    ASSERT_EQ(it[0], 3);*/
     
     std::vector<int> vec;
     std::vector<int> ansVec(3);
     ansVec[0] = 1;
     ansVec[1] = 2;
     ansVec[2] = 3;
-    for (it = deq.begin(); it != deq.end(); ++it)
-    {
+    for (it = deq.begin(); it != deq.end(); ++it) {
         vec.push_back(*it);
     }
     ASSERT_EQ(vec, ansVec);
     
     vec.clear();
-    for (Deque<int>::const_iterator cit = deq.cbegin(); cit != deq.cend(); ++cit)
-    {
+    for (Deque<int>::const_iterator cit = deq.cbegin(); cit != deq.cend(); ++cit) {
         vec.push_back(*cit);
     }
     ASSERT_EQ(vec, ansVec);
@@ -179,22 +231,19 @@ TEST_F(SimpleDequeTest, simpleIteration)
     ansVec[0] = 3;
     ansVec[1] = 2;
     ansVec[2] = 1;
-    for (Deque<int>::reverse_iterator rit = deq.rbegin(); rit != deq.rend(); ++rit)
-    {
+    for (Deque<int>::reverse_iterator rit = deq.rbegin(); rit != deq.rend(); ++rit) {
         vec.push_back(*rit);
     }
     ASSERT_EQ(vec, ansVec);
     
     vec.clear();
-    for (Deque<int>::const_reverse_iterator rit = deq.crbegin(); rit != deq.crend(); ++rit)
-    {
+    for (Deque<int>::const_reverse_iterator rit = deq.crbegin(); rit != deq.crend(); ++rit) {
         vec.push_back(*rit);
     }
     ASSERT_EQ(vec, ansVec);
 }
 
-TEST_F(SimpleDequeTest, constDeque)
-{
+TEST_F(SimpleDequeTest, constDeque) {
     
     Deque<int> deq;
     deq.push_back(1);
@@ -206,10 +255,8 @@ TEST_F(SimpleDequeTest, constDeque)
     ASSERT_EQ(constDeq.front(), 1);
     ASSERT_EQ(constDeq.back(), 3);
 }
-TEST_F(SimpleDequeTest, dequePointer)
-{
-    struct testStruc
-    {
+TEST_F(SimpleDequeTest, dequePointer) {
+    struct testStruc {
         int x = 0;
         int y = 0;
     };
@@ -228,8 +275,7 @@ TEST_F(SimpleDequeTest, dequePointer)
     ASSERT_EQ(it->x, 10);
 }
 
-TEST_F(SimpleDequeTest, equations)
-{
+TEST_F(SimpleDequeTest, equations) {
     Deque<int> deq;
     deq.push_back(2);
     deq.push_front(1);
@@ -265,54 +311,28 @@ TEST_F(SimpleDequeTest, equations)
     ASSERT_TRUE(third == deq.begin());
 }
 
+TEST_F(stressTests, pushing) {
+    double time = getTime(stressPushing, deq, 1000000);
+    ASSERT_LE(time, 1);
+}
+TEST_F(stressTests, poping) {
+    stressPushing(deq, 1000000);
+    double time = getTime(stressPoping, deq, 1000000);
+    ASSERT_LE(time, 1);
+}
+TEST_F(stressTests, popingAhalf) {
+    stressPushing(deq, 1000000);
+    double time = getTime(stressPopingOneHalf, deq, 1000000);
+    ASSERT_LE(time, 1);
+}
+
+TEST_F(stressTests, randomAccess) {
+    stressPushing(deq, 1000000);
+    double time = getTime(stressRandomAccess, deq, 1000000);
+    ASSERT_LE(time, 1);
+}
+
 int main(int argc, char **argv) {
-    /*Deque<int> deq;
-    int n;
-    std::cin >> n;
-    for (int i = 0; i < n; ++i) {
-        std::string command;
-        int num;
-        std::cin >> command;
-        if (command == "push_back")
-        {
-            std::cin >> num;
-            deq.push_back(num);
-        }
-        if (command == "push_front")
-        {
-            std::cin >> num;
-            deq.push_front(num);
-        }
-        if (command == "pop_back")
-        {
-            deq.pop_back();
-        }
-        if (command == "pop_front")
-        {
-            deq.pop_front();
-        }
-        if (command == "size")
-        {
-            std::cout << deq.size() << std::endl;
-        }
-        if (command == "empty")
-        {
-            std::cout << deq.empty() << std::endl;
-        }
-        if (command == "front")
-        {
-            std::cout << deq.front() << std::endl;
-        }
-        if (command == "back")
-        {
-            std::cout << deq.back() << std::endl;
-        }
-        if (command == "[]")
-        {
-            std::cin >> num;
-            std::cout << deq[num] << std::endl;
-        }
-    }*/
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
