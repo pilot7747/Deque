@@ -48,6 +48,11 @@ private:
 template<typename T>
 class Deque {
 public:
+    typedef DequeIterator<T, Deque<T>*> iterator;
+    typedef DequeIterator<const T, const Deque<T>*> const_iterator;
+    typedef std::reverse_iterator<iterator> reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    
     void push_back(const T value);
     void push_front(const T value);
     void pop_back();
@@ -61,10 +66,7 @@ public:
     size_t size() const;
     T& operator[](size_t n);
     const T& operator[](size_t n) const;
-    typedef DequeIterator<T, Deque<T>*> iterator;
-    typedef DequeIterator<const T, const Deque<T>*> const_iterator;
-    typedef std::reverse_iterator<iterator> reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    
     iterator begin();
     const_iterator begin() const;
     iterator end();
