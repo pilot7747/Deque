@@ -7,7 +7,12 @@
 
 #include <iostream>
 #include <gtest/gtest.h>
+#include <string>
 #include <chrono>
+#include <deque>
+#include <cstdio>
+#include <ctime>
+#include <fstream>
 #include "deque.h"
 
 double getTime(void func(Deque<int>&, size_t), Deque<int> &deq, size_t size)
@@ -330,6 +335,122 @@ TEST_F(stressTests, randomAccess) {
     stressPushing(deq, 1000000);
     double time = getTime(stressRandomAccess, deq, 1000000);
     ASSERT_LE(time, 1);
+}
+
+class stlDeqEq : public ::testing::Test {
+protected:
+    void SetUp() {
+        deq.clear();
+    }
+    void TearDown() {
+        deq.clear();
+    }
+    Deque<int> deq;
+};
+
+TEST_F(stlDeqEq, verySimpleSort) {
+    deq.push_back(4);
+    deq.push_back(3);
+    deq.push_back(2);
+    deq.push_back(1);
+    deq.push_front(5);
+    std::sort(deq.begin(), deq.end());
+    ASSERT_EQ(deq[0], 1);
+    ASSERT_EQ(deq[1], 2);
+    ASSERT_EQ(deq[2], 3);
+    ASSERT_EQ(deq[3], 4);
+    ASSERT_EQ(deq[4], 5);
+}
+
+TEST_F(stlDeqEq, sortAndReverseSize1000) {
+    
+    //------GENERATING-----
+    /*std::ofstream of("sortSize1000.txt");
+    for (int i = 0; i < 1000; ++i)
+    {
+        if (rand() % 2 == 0)
+            of << rand() << " f" << std::endl;
+        else
+            of << rand() << " b" << std::endl;
+    }
+    of.close();*/
+    
+    std::ifstream in("sortSize1000.txt");
+    std::deque<int> stdDeq;
+    for (int i = 0; i < 1000; ++i)
+    {
+        int num;
+        std::string command;
+        in >> num >> command;
+        if (command == "f")
+        {
+            deq.push_front(num);
+            stdDeq.push_front(num);
+        }
+        else
+        {
+            deq.push_back(num);
+            stdDeq.push_back(num);
+        }
+    }
+    in.close();
+    std::sort(deq.begin(), deq.end());
+    std::sort(stdDeq.begin(), stdDeq.end());
+    for (int i = 0; i < 1000; ++i) {
+        ASSERT_EQ(deq[i], stdDeq[i]);
+    }
+    std::reverse(deq.begin(), deq.end());
+    std::reverse(stdDeq.begin(), stdDeq.end());
+    for (int i = 0; i < 1000; ++i) {
+        ASSERT_EQ(deq[i], stdDeq[i]);
+    }
+}
+
+TEST_F(stlDeqEq, sortAndReverseConsecutiveNumbersSize1000) {
+    
+    //------GENERATING-----
+    /*std::ofstream of("sortSize1000.txt");
+     for (int i = 0; i < 1000; ++i)
+     {
+     if (rand() % 2 == 0)
+     of << i << " f" << std::endl;
+     else
+     of << i << " b" << std::endl;
+     }
+     of.close();*/
+    
+    std::ifstream in("sortSize1000.txt");
+    std::deque<int> stdDeq;
+    for (int i = 0; i < 1000; ++i)
+    {
+        int num;
+        std::string command;
+        in >> num >> command;
+        if (command == "f")
+        {
+            deq.push_front(num);
+            stdDeq.push_front(num);
+        }
+        else
+        {
+            deq.push_back(num);
+            stdDeq.push_back(num);
+        }
+    }
+    in.close();
+    std::sort(deq.begin(), deq.end());
+    std::sort(stdDeq.begin(), stdDeq.end());
+    Deque<int>::reverse_iterator deqIt = deq.rbegin();
+    std::deque<int>::reverse_iterator stdDeqIt = stdDeq.rbegin();
+    for (; deqIt != deq.rend(); ++deqIt) {
+        ASSERT_EQ(*deqIt, *stdDeqIt);
+        ++stdDeqIt;
+    }
+    std::reverse(deq.begin(), deq.end());
+    std::reverse(stdDeq.begin(), stdDeq.end());
+    for (int i = 0; i < 1000; ++i) {
+        ASSERT_EQ(deq[i], stdDeq[i]);
+    }
 }
 
 int main(int argc, char **argv) {

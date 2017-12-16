@@ -7,8 +7,7 @@
 template<typename T> class Deque;
 
 template<typename T, typename DequePointer>
-class DequeIterator : public std::iterator<std::random_access_iterator_tag, T>
-{
+class DequeIterator : public std::iterator<std::random_access_iterator_tag, T> {
 public:
     using difference_type = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
     friend class Deque<T>;
@@ -47,8 +46,7 @@ private:
 };
 
 template<typename T>
-class Deque
-{
+class Deque {
 public:
     void push_back(const T value);
     void push_front(const T value);
@@ -84,198 +82,165 @@ public:
 private:
     std::vector<T> _leftStack;
     std::vector<T> _rightStack;
-    void balance();
+    void _balance();
 };
 //Implementation
 
 //----FUNCTIONS WITH ITERATORS----
 template<typename T>
-DequeIterator<T, Deque<T>*> Deque<T>::begin()
-{
+DequeIterator<T, Deque<T>*> Deque<T>::begin() {
     return iterator(this);
 }
 
 template<typename T>
-typename Deque<T>::const_iterator Deque<T>::begin() const
-{
+typename Deque<T>::const_iterator Deque<T>::begin() const {
     return const_iterator(this);
 }
 
 template<typename T>
-DequeIterator<T, Deque<T>*> Deque<T>::end()
-{
+DequeIterator<T, Deque<T>*> Deque<T>::end() {
     iterator it(this);
     it += this->size();
     return it;
 }
 
 template<typename T>
-typename Deque<T>::const_iterator Deque<T>::end() const
-{
+typename Deque<T>::const_iterator Deque<T>::end() const {
     const_iterator it(this);
     it += this->size();
     return it;
 }
 
 template<typename T>
-DequeIterator<const T, const Deque<T>*> Deque<T>::cbegin() const
-{
+DequeIterator<const T, const Deque<T>*> Deque<T>::cbegin() const {
     return const_iterator(this);
 }
 
 template<typename T>
-DequeIterator<const T, const Deque<T>*> Deque<T>::cend() const
-{
+DequeIterator<const T, const Deque<T>*> Deque<T>::cend() const {
     const_iterator it(this);
     it += this->size();
     return it;
 }
 
 template<typename T>
-typename Deque<T>::reverse_iterator Deque<T>::rbegin()
-{
+typename Deque<T>::reverse_iterator Deque<T>::rbegin() {
     return reverse_iterator(end());
 }
 
 template<typename T>
 
-typename Deque<T>::reverse_iterator Deque<T>::rend()
-{
+typename Deque<T>::reverse_iterator Deque<T>::rend() {
     return reverse_iterator(begin());
 }
 
 template<typename T>
-typename Deque<T>::const_reverse_iterator Deque<T>::rbegin() const
-{
+typename Deque<T>::const_reverse_iterator Deque<T>::rbegin() const {
     return const_reverse_iterator(end());
 }
 
 template<typename T>
-typename Deque<T>::const_reverse_iterator Deque<T>::rend() const
-{
+typename Deque<T>::const_reverse_iterator Deque<T>::rend() const {
     return const_reverse_iterator(begin());
 }
 
 template<typename T>
-typename Deque<T>::const_reverse_iterator Deque<T>::crbegin() const
-{
+typename Deque<T>::const_reverse_iterator Deque<T>::crbegin() const {
     return const_reverse_iterator(cend());
 }
 
 template<typename T>
-typename Deque<T>::const_reverse_iterator Deque<T>::crend() const
-{
+typename Deque<T>::const_reverse_iterator Deque<T>::crend() const {
     return const_reverse_iterator(cbegin());
 }
 //---IMPLEMENTATION OF Deque FUNCTIONS---
 template<typename T>
-void Deque<T>::push_back(const T value)
-{
+void Deque<T>::push_back(const T value) {
     _leftStack.push_back(value);
 }
 
 template<typename T>
-void Deque<T>::push_front(const T value)
-{
+void Deque<T>::push_front(const T value) {
     _rightStack.push_back(value);
 }
 
 template<typename T>
-void Deque<T>::balance()
-{
+void Deque<T>::_balance() {
+    std::vector<T>* emptyVec;
+    std::vector<T>* balancingVec;
     if (_leftStack.empty())
     {
-        std::stack<T> localStack;
-        size_t rightSize = _rightStack.size();
-        for (size_t i = 0; i < rightSize / 2; ++i)
-        {
-            localStack.push(_rightStack.back());
-            _rightStack.pop_back();
-        }
-        while (!_rightStack.empty())
-        {
-            _leftStack.push_back(_rightStack.back());
-            _rightStack.pop_back();
-        }
-        while (!localStack.empty())
-        {
-            _rightStack.push_back(localStack.top());
-            localStack.pop();
-        }
+        emptyVec = &_leftStack;
+        balancingVec = &_rightStack;
     }
     else
     {
-        std::stack<T> localStack;
-        size_t leftSize = _leftStack.size();
-        for (size_t i = 0; i < leftSize / 2; ++i)
-        {
-            localStack.push(_leftStack.back());
-            _leftStack.pop_back();
-        }
-        while (!_leftStack.empty())
-        {
-            _rightStack.push_back(_leftStack.back());
-            _leftStack.pop_back();
-        }
-        while (!localStack.empty())
-        {
-            _leftStack.push_back(localStack.top());
-            localStack.pop();
-        }
+        emptyVec = &_rightStack;
+        balancingVec = &_leftStack;
+    }
+    std::stack<T> localStack;
+    size_t balancingSize = balancingVec->size();
+    for (size_t i = 0; i < balancingSize / 2; ++i)
+    {
+        localStack.push(balancingVec->back());
+        balancingVec->pop_back();
+    }
+    while (!balancingVec->empty())
+    {
+        emptyVec->push_back(balancingVec->back());
+        balancingVec->pop_back();
+    }
+    while (!localStack.empty())
+    {
+        balancingVec->push_back(localStack.top());
+        localStack.pop();
     }
 }
 
 template<typename T>
-void Deque<T>::pop_back()
-{
+void Deque<T>::pop_back() {
     if (_leftStack.empty())
-        balance();
+        _balance();
     _leftStack.pop_back();
 }
 
 template<typename T>
-void Deque<T>::pop_front()
-{
+void Deque<T>::pop_front() {
     if (_rightStack.empty())
-        balance();
+        _balance();
     _rightStack.pop_back();
 }
 
 template<typename T>
-T& Deque<T>::back()
-{
+T& Deque<T>::back() {
     if (_leftStack.empty())
-        balance();
-    return _leftStack[_leftStack.size() - 1];
+        _balance();
+    return _leftStack.back();
 }
 
 template<typename T>
-const T& Deque<T>::back() const
-{
+const T& Deque<T>::back() const {
     if (_leftStack.empty())
-        return _rightStack[0];
-    return _leftStack[_leftStack.size() - 1];
+        return _rightStack.front();
+    return _leftStack.back();
 }
 
 template<typename T>
-T& Deque<T>::front()
-{
+T& Deque<T>::front() {
     if (_rightStack.empty())
-        balance();
-    return _rightStack[_rightStack.size() - 1];
+        _balance();
+    return _rightStack.back();
 }
 
 template<typename T>
-const T& Deque<T>::front() const
-{
+const T& Deque<T>::front() const {
     if (_rightStack.empty())
-        return _leftStack[0];
-    return _rightStack[_rightStack.size() - 1];
+        return _leftStack.front();
+    return _rightStack.back();
 }
 
 template<typename T>
-const T& Deque<T>::operator[](size_t n) const
-{
+const T& Deque<T>::operator[](size_t n) const {
     if (n < _rightStack.size())
         return _rightStack[_rightStack.size() - n - 1];
     else
@@ -284,8 +249,7 @@ const T& Deque<T>::operator[](size_t n) const
 
 
 template<typename T>
-T& Deque<T>::operator[](size_t n)
-{
+T& Deque<T>::operator[](size_t n) {
     if (n < _rightStack.size())
         return _rightStack[_rightStack.size() - n - 1];
     else
@@ -293,20 +257,17 @@ T& Deque<T>::operator[](size_t n)
 }
 
 template<typename T>
-size_t Deque<T>::size() const
-{
+size_t Deque<T>::size() const {
     return _leftStack.size() + _rightStack.size();
 }
 
 template <typename T>
-bool Deque<T>::empty() const
-{
+bool Deque<T>::empty() const {
     return (_leftStack.empty() && _rightStack.empty());
 }
 
 template<typename T>
-void Deque<T>::clear()
-{
+void Deque<T>::clear() {
     _leftStack.clear();
     _rightStack.clear();
 }
@@ -319,77 +280,66 @@ Deque<T> :: Deque (const Deque<T> &tmp) {
 
 //---IMPLEMENTATION OF ITERATORS
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator+=(difference_type rhs)
-{
+inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator+=(difference_type rhs) {
     _ind += rhs;
     return *this;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator-=(difference_type rhs)
-{
+inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator-=(difference_type rhs) {
     _ind -= rhs;
     return *this;
 }
 
 template<typename T, typename DequePointer>
-inline T& DequeIterator<T, DequePointer>::operator*() const
-{
+inline T& DequeIterator<T, DequePointer>::operator*() const {
     return (*_deq)[_ind];
 }
 
 template<typename T, typename DequePointer>
-inline T* DequeIterator<T, DequePointer>::operator->() const
-{
+inline T* DequeIterator<T, DequePointer>::operator->() const {
     return &(*_deq)[_ind];
 }
 
 
 template<typename T, typename DequePointer>
-inline T& DequeIterator<T, DequePointer>::operator[](difference_type rhs)
-{
+inline T& DequeIterator<T, DequePointer>::operator[](difference_type rhs) {
     return (*_deq)[_ind + rhs];
 }
 
 template<typename T, typename DequePointer>
-inline T& DequeIterator<T, DequePointer>::operator[](difference_type rhs) const
-{
+inline T& DequeIterator<T, DequePointer>::operator[](difference_type rhs) const {
     return (*_deq)[_ind + rhs];
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator++()
-{
+inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator++() {
     *this += 1;
     return *this;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator--()
-{
+inline DequeIterator<T, DequePointer>& DequeIterator<T, DequePointer>::operator--() {
     *this -= 1;
     return *this;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator++(int)
-{
+inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator++(int) {
     DequeIterator<T, DequePointer> temp = *this;
     ++*this;
     return temp;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator--(int)
-{
+inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator--(int) {
     DequeIterator<T, DequePointer> temp = *this;
     --*this;
     return temp;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator+(const DequeIterator& rhs)
-{
+inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator+(const DequeIterator& rhs) {
     DequeIterator<T, DequePointer> it(_deq);
     it += _ind + rhs._ind;
     return it;
@@ -397,75 +347,64 @@ inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator+(
 
 
 template<typename T, typename DequePointer>
-inline typename std::iterator<std::random_access_iterator_tag, T>::difference_type DequeIterator<T, DequePointer>::operator-(const DequeIterator<T, DequePointer> &rhs) const
-{
+inline typename std::iterator<std::random_access_iterator_tag, T>::difference_type DequeIterator<T, DequePointer>::operator-(const DequeIterator<T, DequePointer> &rhs) const {
     return (static_cast<difference_type>(_ind) - static_cast<difference_type>(rhs._ind));
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator+(difference_type rhs) const
-{
+inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator+(difference_type rhs) const {
     DequeIterator<T, DequePointer> it(_deq);
     it += (_ind + rhs);
     return it;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator-(difference_type rhs) const
-{
+inline DequeIterator<T, DequePointer> DequeIterator<T, DequePointer>::operator-(difference_type rhs) const {
     DequeIterator<T, DequePointer> it(_deq);
     it += (_ind - rhs);
     return it;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> operator+(typename std::iterator<std::random_access_iterator_tag, T>::difference_type lhs, const DequeIterator<T, DequePointer>& rhs)
-{
+inline DequeIterator<T, DequePointer> operator+(typename std::iterator<std::random_access_iterator_tag, T>::difference_type lhs, const DequeIterator<T, DequePointer>& rhs) {
     DequeIterator<T, DequePointer> it(rhs._deq);
     it += (lhs + rhs._ind);
     return it;
 }
 
 template<typename T, typename DequePointer>
-inline DequeIterator<T, DequePointer> operator-(typename std::iterator<std::random_access_iterator_tag, T>::difference_type lhs, const DequeIterator<T, DequePointer>& rhs)
-{
+inline DequeIterator<T, DequePointer> operator-(typename std::iterator<std::random_access_iterator_tag, T>::difference_type lhs, const DequeIterator<T, DequePointer>& rhs) {
     DequeIterator<T, DequePointer> it(rhs._deq);
     it += (lhs - rhs._ind);
     return it;
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator==(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator==(const DequeIterator<T, DequePointer>& rhs) const {
     return (_deq == rhs._deq) && (_ind == rhs._ind);
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator!=(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator!=(const DequeIterator<T, DequePointer>& rhs) const {
     return !(*this == rhs);
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator<(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator<(const DequeIterator<T, DequePointer>& rhs) const {
     return (_deq == rhs._deq) && (_ind < rhs._ind);
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator<=(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator<=(const DequeIterator<T, DequePointer>& rhs) const {
     return (*this < rhs) || (*this == rhs);
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator>(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator>(const DequeIterator<T, DequePointer>& rhs) const {
     return !(*this <= rhs);
 }
 
 template<typename T, typename DequePointer>
-inline bool DequeIterator<T, DequePointer>::operator>=(const DequeIterator<T, DequePointer>& rhs) const
-{
+inline bool DequeIterator<T, DequePointer>::operator>=(const DequeIterator<T, DequePointer>& rhs) const {
     return !(*this < rhs);
 }
